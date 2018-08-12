@@ -8,12 +8,12 @@ def register():
         print("Registrese")
         print()
         num=str(i)
-        cedula=input("ingrese su número de cédula, si ingresa una x para: ")
+        cedula=input("ingrese su número de cédula con ceros y sin espacios, si ingresa una x para: ")
         if cedula!="x":
             nombre=input("ingrese su nombre completo: ")
             fechaNacimiento=input("ingrese su fecha de nacimiento(día/mes/año): ")
             edad=int(input("ingrese su edad: "))
-            if edad<18:
+            if edad<=18:
                 sexo=input("Ingrese su sexo(Masculino o Femenino): ")
                 recidencia=input("ingrese su cantón de residencia, una vez ingrese al sistema vaya al apartado de provincias y agreguelo: ")
                 tipoUsuario=input("ingrese su tipo de usurio(ciudadano, oficial u oficina): ")
@@ -38,23 +38,28 @@ def register():
 print(datos)
 
 def login():
+    print()
     registro=input("está registrado?(si o no): ")
     if registro=="si":
-        cedula=input("ingrese su cédula: ")
-        pasword=input("ingrese su contraseña: ")
-        dd=list(datos.keys())[list(datos.values()).index(pasword)]
-        jj=list(datos.keys())[list(datos.values()).index(cedula)]
-        if dd in datos and jj in datos:
-            hh=0
-            for i in dd:
-                hh=i
-
-            usuario="tipo de usuario"+str(hh)
-            if usuario == "ciudadano"or usuario=="Cuidadano":
-                uu=persona()
-                uu.ciudadano()
-
-        else:
+        try:
+            print()
+            cedula=input("ingrese su cédula cn ceros y sin espacios: ")
+            pasword=input("ingrese su contraseña: ")
+            dd=list(datos.keys())[list(datos.values()).index(pasword)]
+            jj=list(datos.keys())[list(datos.values()).index(cedula)]
+            try:
+                if cedula==datos.get(dd) and pasword== datos.get(jj):
+                    hh=0
+                    for i in dd:
+                        hh=i
+                    usuario="tipo de usuario"+str(hh)
+                    if usuario == "ciudadano"or usuario=="Cuidadano":
+                        uu=persona()
+                        uu.ciudadano()
+            except:
+                print("intente de nuevo, por favor")
+                login()
+        except:
             print("Inte de nuevo, por favor")
             login()
     else:
@@ -81,7 +86,7 @@ def provincias():
             self.alajuela=["Alajuela", "San Carlos", "Los Chiles"]
             self.heredia=["Heredia", "Flores"]
             self.sanJose=["San Pedro de Montes de Oca", "Desamparados"]
-
+        menu()
     class nuevaProvincia(verprovincias):
         prov=input("Ingrese el nombre de la provincia: ")
         provincias=[]
@@ -92,12 +97,28 @@ def provincias():
                 break
             else:
                 provincia.append(canton)
-
+        menu()
     class nuevoCanton(verprovincias):
         print("Escoja una provincia")
         print(verprovincias)
+        menu()
+    menu()
+
+vehiculos = {}
+evento={}
+codigo2=[]
+def codigo():
+    codigo = []
+    from random import randint
+    for i in range (0,5):
+        nume=randint(0,6)
+        codigo.append(nume)
+    if codigo not in codigo2:
+        codigo2.append(codigo)
+
 
 class persona():
+
     def ciudadano(self):
 
         def menuciudadano():
@@ -115,52 +136,7 @@ class persona():
 
         class crudVehiculos(persona):
 
-            def __init__(self):
-                self.vehiculos = []
-
-            def ingresarVehi(self):
-
-                for i in range(0,1000):
-                    num=str(i)
-                    cedula=int(input("Ingrese su cédula, si ingresa x cierra: "))
-                    if cedula!="x":
-                        placa= input("ingrese la placa del vehículo: ")
-                        dic= {}
-                        ano=int(input("Ingrese el año del carro: "))
-                        marca= input("ingrese la marca del vehículo: ")
-                        color=input("Ingrese el color de su carro: ")
-                        tipo=input("Su carro es moto, automóvil, bus o camión")
-
-                        if placa not in self.vehiculos:
-
-                            dic["Cédula"+num]=cedula
-                            dic["placa"+num]=placa
-                            dic["Año"+num]=ano
-                            dic["Marca"+num]=marca
-                            dic["color"+num]=color
-                            dic["tipo"+num]=tipo
-                        self.vehiculos.append(dic)
-
-                    else:
-                        break
-
-                    dd=list(datos.keys())[list(datos.values()).index(cedula)]
-                    hh="0"
-                    for i in dd:
-                        hh=i
-                    datos["vehiculo"+str(hh)]=self.vehiculos
-
-
-            def vervehiculo(self):
-
-                placa=int(input("Ingrese la placa del vehículo que desea ver: "))
-
-                for i in self.vehiculos:
-                    if placa in self.vehiculos:
-                        resultado=self.vehiculos
-                        print(placa,",", resultado )
-
-            def menuVehiculos(self):
+            def menVehiculos(self):
                 print()
                 print("1. ingresar un nuevo vehiculo")
                 print("2. ver un vehiculo en especifico")
@@ -173,18 +149,135 @@ class persona():
                 elif desicion==2:
                     self. vervehiculo()
                 elif desicion==3:
-                    print(self.vehiculos)
+                    print(vehiculos)
                 elif desicion==4:
                     menuciudadano()
-            menuVehiculos()
+
+            def ingresarVehi(self):
+
+                for i in range(0,1000):
+
+                    self.cedula=int(input("Ingrese su cédula, si ingresa x cierra: "))
+
+                    try:
+                        if self.cedula!="x":
+                            self.placa= input("ingrese la placa del vehículo: ")
+                            self.ano=int(input("Ingrese el año del carro: "))
+                            self.marca= input("ingrese la marca del vehículo: ")
+                            self.color=input("Ingrese el color de su carro: ")
+                            self. tipo=input("Su carro es moto, automóvil, bus o camión")
+                            nom=list(datos.keys())[list(datos.values()).index(self.cedula)]
+                            j=0
+                            if len(vehiculos)==0:
+                                j=0
+                            elif len(vehiculos)>0:
+                                j=len(vehiculos)/6
+
+                            vehiculos["Cédula"+str(j)]=self.cedula
+                            vehiculos["placa"+str(j)]=self.placa
+                            vehiculos["Año"+str(j)]=self.ano
+                            vehiculos["Marca"+str(j)]=self.marca
+                            vehiculos["color"+str(j)]=self.color
+                            vehiculos["tipo"+str(j)]=self.tipo
+                    except:
+                        break
+
+                    dd=list(datos.keys())[list(datos.values()).index(self.cedula)]
+                    hh="0"
+                    for i in dd:
+                        hh=i
+                    datos["vehiculo"+str(hh)]=vehiculos
+
+
+
+            def vervehiculo(self):
+
+                placa=(input("Ingrese la placa del vehículo que desea ver: "))
+                num=list(datos.keys())[list(datos.values()).index(placa)]
+                for i in num:
+                    num=i
+                print("La cédula del dueño del carro es ",vehiculos["Cédula"+num])
+                print("Placa ",vehiculos["placa"+num])
+                print("Año",vehiculos["Año"+num])
+                print()
+
+
+            menVehiculos()
+
+
 
 
         class eventociudadano(persona):
-            from random import randint
-            codigo=randint(0,6)
-            nombre=input("ingrese su nombre: ")
-            ff=list(datos.keys())[list(datos.values()).index(nombre)]
 
+            import datetime
+
+            nombre=input("ingrese su nombre: ")
+            nom=list(datos.keys())[list(datos.values()).index(nombre)]
+            num=0
+            for i in nom:
+                num=i
+
+            print("Desea saber si el lugar existe en la base de datos")
+            desicion=input("si o no: ")
+            if desicion=="si":
+                provincias()
+
+            lugar=input("Ingrese el lugar del accidente(Provincia/cantón): ")
+            fecha = datetime
+            placa=input("Ingrese la placa del vehículo:")
+            try:
+                if placa in datos:
+                    estado="abierto"
+
+                    multa=0
+                    tipo=vehiculos.get("tipo"+str(num))
+                    ano=vehiculos.get("Año"+str(num))
+                    impuesto=0
+                    impuesto2=0
+
+                    if tipo=="moto"or tipo =="Moto":
+                        impuesto=10000*0.15
+                        if ano < 2000:
+                            impuesto2 = 10000 * 0.10
+                        multa=10000+impuesto+impuesto2
+                    elif tipo=="Automóvil" or tipo=="automóvil":
+                        impuesto=2500*0.30
+                        if ano < 2000:
+                            impuesto2 = 2500 * 0.10
+                        multa=2500+impuesto+impuesto2
+                    elif tipo=="Bus" or tipo=="bus":
+                        impuesto=45000*0.45
+                        if ano < 2000:
+                            impuesto2 = 45000 * 0.10
+                        multa=45000+impuesto+impuesto2
+                    elif tipo =="Camión" or tipo=="camión":
+                        impuesto =65000*0.70
+                        if ano < 2000:
+                            impuesto2 = 65000 * 0.10
+                        multa=65000+impuesto+impuesto2
+                    numero=0
+                    if len(evento)>0:
+                        numero=len(evento)/6
+                    elif len(evento)==0:
+                        numero=0
+
+                    evento["código"+str(numero)]=codigo
+                    evento["nombre de usuario"+str(numero)]=nombre
+                    evento["lugar"+str(numero)]=lugar
+                    evento["placa"+str(numero)]=placa
+                    evento["estado"+str(numero)]=estado
+                    evento["fecha"+str(numero)]=fecha
+
+                    print("Código: ",codigo,", nombre del usuario: ", nombre, ", lugar del incidente: ",lugar, ", placa: ", placa, ", estado: ", estado, "fecha: ",fecha)
+
+            except:
+                print("Su placa no se encuentra registrada, vuelva a intentarlo")
+                menuciudadano()
 
         menuciudadano()
+
+
+
+
+
 login()
