@@ -1,10 +1,19 @@
 datos={"cédula0":"208090159", "nombre0":"Esteban Murillo", "fecha de nacimiento0":"14/09/2000", "edad0":"17" ,"sexo0":"Masculino","residencia0":"San Carlos","Tipo de usuario0": "Admin", "Contraseña0":"Admin"}
 
-def register():
+def menuInicio():
+    print()
+    registro = input("está registrado?(si o no): ")
+    if registro == "si" or registro == "Si" or registro=="SI":
+        login()
+    else:
+        register()
+
+def register():# sirve para registrar los usuarios
     largo=len(datos)
-    nume=largo/10
+    nume=largo/9
 
     for i in range(int(nume),1000):
+        print()
         print("Registrese")
         print()
         num=str(i)
@@ -16,56 +25,60 @@ def register():
             if edad<=18:
                 sexo=input("Ingrese su sexo(Masculino o Femenino): ")
                 recidencia=input("ingrese su cantón de residencia, una vez ingrese al sistema vaya al apartado de provincias y agreguelo: ")
-                tipoUsuario=input("ingrese su tipo de usurio(ciudadano, oficial u oficina): ")
-                if tipoUsuario=="ciudadano" or tipoUsuario=="Ciudadano" or tipoUsuario=="oficial de tránsito" or tipoUsuario=="Oficial de tránsito"or tipoUsuario=="oficina del juzgado"or tipoUsuario=="Oficina del juzgado":
-                    password=input("ingrese una contraseña: ")
+                tipoUsuario=input("ingrese su tipo de usurio(ciudadano, oficial u oficina del juzgado): ")
+                password=input("ingrese una contraseña: ")
 
-                    datos["cédula"+num] = cedula
-                    datos["nombre"+num] = nombre
-                    datos["fecha de nacimiento"+num]=fechaNacimiento
-                    datos["edad"+num] = edad
-                    datos["sexo"+num] = sexo
-                    datos["lugar de residencia"+num] = recidencia
-                    datos["tipo de usuario"+num] = tipoUsuario
-                    datos["contraseña"+num] = password
+                datos["cédula"+num] = cedula
+                datos["nombre"+num] = nombre
+                datos["fecha de nacimiento"+num]=fechaNacimiento
+                datos["edad"+num] = edad
+                datos["sexo"+num] = sexo
+                datos["lugar de residencia"+num] = recidencia
+                datos["tipo de usuario"+num] = tipoUsuario
+                datos["contraseña"+num] = password
 
-                login()
+                menuInicio()
 
             else:
                 print("usted es menor de edad, no puede ecceder a la plataforma")
                 exit()
+        else:
+            menuInicio()
 
 print(datos)
 
-def login():
-    print()
-    registro=input("está registrado?(si o no): ")
-    if registro=="si":
-        try:
-            print()
-            cedula=input("ingrese su cédula cn ceros y sin espacios: ")
-            pasword=input("ingrese su contraseña: ")
-            dd=list(datos.keys())[list(datos.values()).index(pasword)]
-            jj=list(datos.keys())[list(datos.values()).index(cedula)]
-            try:
-                if cedula==datos.get(dd) and pasword== datos.get(jj):
-                    hh=0
-                    for i in dd:
-                        hh=i
-                    usuario="tipo de usuario"+str(hh)
-                    if usuario == "ciudadano"or usuario=="Cuidadano":
-                        uu=persona()
-                        uu.ciudadano()
-            except:
-                print("intente de nuevo, por favor")
-                login()
-        except:
-            print("Inte de nuevo, por favor")
-            login()
-    else:
-        register()
+def login():#el inicio de sesión
 
-def provincias():
+    try:
+        print()
+        cedula=input("ingrese su cédula con ceros y sin espacios: ")
+        pasword=input("ingrese su contraseña: ")
+        dd=list(datos.keys())[list(datos.values()).index(pasword)]
+        jj=list(datos.keys())[list(datos.values()).index(cedula)]
+        try:
+            if cedula==datos.get(dd) and pasword== datos.get(jj):
+                validacion(dd)
+        except:
+            print("intente de nuevo, por favor, sus datos no son correctos")
+            login()
+    except:
+        print("Inte de nuevo, por favor, sus datos no son correctos")
+        login()
+
+def validacion(dd):#aqui se valida el tipo de usuario
+    dd=dd
+    hh = 0
+    for i in dd:
+        hh = i
+        usuario = "tipo de usuario" + str(hh)
+        if usuario == "ciudadano" or usuario == "Cuidadano":
+            uu = persona()
+            uu.ciudadano()
+        elif usuario=="oficial" or usuario=="Oficial":
+            uu=persona()
+            uu.oficial()
+
+def provincias():#CRUD de provincias
     def menu():
         print()
         print("1. Ver las provincias y cantones")
@@ -106,16 +119,7 @@ def provincias():
 
 vehiculos = {}
 evento={}
-codigo2=[]
-def codigo():
-    codigo = []
-    from random import randint
-    for i in range (0,5):
-        nume=randint(0,6)
-        codigo.append(nume)
-    if codigo not in codigo2:
-        codigo2.append(codigo)
-
+codigos=[]
 
 class persona():
 
@@ -207,9 +211,17 @@ class persona():
 
 
 
-        class eventociudadano(persona):
+        class eventociudadano(persona):#CRUD evento ciudadano
+
+            codigo = []
 
             import datetime
+            from random import randint
+            for i in range(0, 5):
+                nume = randint(0, 6)
+                codigo.append(nume)
+            if codigo not in codigos:
+                codigos.append(codigo)
 
             nombre=input("ingrese su nombre: ")
             nom=list(datos.keys())[list(datos.values()).index(nombre)]
@@ -235,7 +247,7 @@ class persona():
                     impuesto=0
                     impuesto2=0
 
-                    if tipo=="moto"or tipo =="Moto":
+                    if tipo=="moto"or tipo =="Moto":#este montón de if es para comprobar cuanto tiene que pagar de multa
                         impuesto=10000*0.15
                         if ano < 2000:
                             impuesto2 = 10000 * 0.10
@@ -276,8 +288,53 @@ class persona():
 
         menuciudadano()
 
+    def oficial(self):
+        print()
+        print("A continuación se mostrarán todos los eventos registrados")
+        print()
+        nom=input("Ingrese su nombre: ")
+
+        for i in range(0, len(evento)):
+            j=i
+            codigo=evento.get("código"+str(j))
+            nombre=evento.get("nombre de usuario"+str(j))
+            lugar=evento.get("lugar"+str(j))
+            placa=evento.get("placa"+str(j))
+            estad = evento["estado" + str(j)] = "Por aprobar"
+            estado=evento.get("estado"+str(j))
+            fecha=evento.get("fecha"+str(j))
+            numparte=int(input("Ingrese el número de parte: "))
+            evento["oficial"+str(j)]=nom
+            print()
+            import datetime
+            ahora=datetime.datetime.now()
+            compara=fecha+datetime.timedelta(0,30)
+            if ahora>=compara:
+                print("Evento"+str(j), ", codigo: ",codigo,", nombre de usuario: ",nombre,", lugar: ",lugar,", placa: ",placa, ", nobre del oficial: ", nom, ", número de parte: ", numparte, ", estado: ", estado, ", fecha: ", ahora)
+
+    def juzgado(self):
+        nom=input("Ingrese su nombre: ")
+        print()
+        print("Ahora se mostrarán todos los eventos ")
+        for i in range(0, len(evento)):
+            j = i
+            nome= evento.get("oficial"+str(j))
+            numreg = int(input("Ingrese el número de registro: "))
+            codigo = evento.get("código" + str(j))
+            nombre = evento.get("nombre de usuario" + str(j))
+            lugar = evento.get("lugar" + str(j))
+            placa = evento.get("placa" + str(j))
+            estad = evento["estado" + str(j)] = "Completo"
+            estado = evento.get("estado" + str(j))
+            fecha = evento.get("fecha" + str(j))
+            numparte = int(input("Ingrese el número de parte: "))
+            print()
+            import datetime
+            ahora = datetime.datetime.now()
+            print("Evento" + str(j), ", codigo: ", codigo, ", nombre de usuario: ", nombre, ", lugar: ", lugar,
+                ", placa: ", placa, ", nobre del oficial: ", nome, ", número de parte: ", numparte,
+                ", nombre oficina del juzgado: ", nom, ", número de registro: ", numreg ,", estado: ", estado, ", fecha: ", ahora)
 
 
 
-
-login()
+menuInicio()
